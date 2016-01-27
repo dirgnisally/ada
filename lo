@@ -1,0 +1,169 @@
+#include <iostream>
+#include <cstring>
+#include <sstream>
+#include <fstream>
+#include <iomanip>
+using namespace std;
+void print(int A[], int nro){
+    for (int i = 0; i < nro ; ++i)
+        cout << A[i] << endl;
+
+}
+int  merge(int list1[ ] , int tam1 , int list2[ ] , int tam2 , int list3[ ], int tam)
+{
+    int i1, i2, i3;
+    if (tam1+tam2 > tam) {
+        return false;
+    }
+    i1 = 0; i2 = 0; i3 = 0;
+
+    while (i1 < tam1 && i2 < tam2) {
+        if (list1[i1] < list2[i2]) {
+            list3[i3++] = list1[i1++];
+        }
+        else {
+            list3[i3++] = list2[i2++];
+        }
+    }
+    while (i1 < tam1) {
+
+        list3[i3++] = list1[i1++];
+    }
+    while (i2 < tam2) {
+
+        list3[i3++] = list2[i2++];
+    }
+    return true;
+}
+
+void merge_sort (int A[], int tam)
+{
+    int temp[tam];
+    int mid, i;
+    if (tam < 2) {
+        return;
+    }
+    else {
+        mid = tam / 2;
+        merge_sort(A, mid);
+        merge_sort(A + mid, tam - mid);
+        merge (A, mid, A + mid, tam - mid, temp, tam);
+        for (i = 0; i < tam; i++) {
+            A[i] = temp[i];
+        }
+    }
+}
+
+void insert(int A[], int tam){
+     int key;
+     int i;
+     for (int j = 1; j < tam; j++) {
+            key = A[j];
+            i = j-1;
+            while ((i > -1)&& (A[i] > key))
+            {    A[i+1] = A[i];
+                 i = i-1;
+            }
+
+            A[i+1] = key;
+     }
+}
+
+void MaxHeapify(int A[], int i, int heapSize){
+     int l,r, largest, tmp;
+     l = i+1;
+     r = i+2;
+     cout << "i: "<< i << endl;
+     cout << "l: "<< l << endl;
+     cout << "r: "<< r << endl;
+     cout << "heapSize: "<< heapSize << endl;
+
+     if((l< heapSize)&& (A[l] > A [i]))
+     {
+        cout << "A[l]: "<< A[l] << endl;
+        cout << "A[i]: "<< A[i] << endl;
+        largest = l;
+     }
+
+     else {
+         largest = i;
+        cout << "largest: "<< largest << endl;
+     }
+
+
+    if((r < heapSize)&& (A[r] > A[largest])){
+        largest = r;
+        cout << "A[r]: "<< A[r] << endl;
+        cout << "A[largest]: "<< A[largest] << endl;
+        cout << "largest: "<< largest << endl;
+    }
+
+
+    if (largest != i){
+        cout << "largest: "<< largest << endl;
+        cout << "i: "<< i << endl;
+        tmp = A[i];
+        A[i] = A[largest];
+        A[largest] = tmp;
+
+        print(A,heapSize);
+
+        MaxHeapify(A,largest,heapSize);
+        cout<<"entro"<<endl;
+    }
+}
+
+void BuildMaxHeap(int A[],  int heapSize){
+int desde;
+    desde = heapSize/2;
+
+    cout << "desde: "<< desde << endl;
+
+    for(int ii=desde-1; ii>=0; ii--){
+        cout << "ii: de BuildMaxheap "<< ii << endl;
+
+        MaxHeapify(A,ii,heapSize);
+    }
+}
+
+void HeapSort(int A[],  int heapSize){
+    int tmp;
+    int tmpHeapSize;
+    tmpHeapSize = heapSize;
+
+    BuildMaxHeap(A,heapSize);
+    cout << "salio de build: "<< endl;
+    print(A,heapSize);
+     cout << "---------: "<< endl;
+     //cout << "heapSize: "<< heapSize-1 << endl;
+     for(int ii=heapSize-1; ii>=1; ii--){
+        tmp = A[0];
+        cout << "tmp: "<< tmp<<endl;
+         cout << "A[ii]: "<< A[ii]<<endl;
+        A[0] = A[ii];
+        A[ii] = tmp;
+         cout << "pprint del primero: "<< endl;
+        print(A,heapSize);
+        cout << "---------: "<< endl;
+        tmpHeapSize = tmpHeapSize-1;
+        MaxHeapify(A, 1, tmpHeapSize);
+
+     }
+
+}
+
+int main()
+{
+    int nro = 3;
+    int a[] = {16, 14, 10};
+    //merge_sort(a,5);
+    //insert(a,5);
+    print(a,nro);
+    //MaxHeapify(a,2,5);
+    HeapSort(a,nro);
+    cout<<"Ordenado"<<endl;
+    print(a,nro);
+
+    return (0);
+
+}
